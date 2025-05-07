@@ -1,69 +1,188 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# insured_api
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descrição
 
-## About Laravel
+**insured_api** é a API backend desenvolvida em Laravel 19 sobre PHP 8.4.5, responsável por expor endpoints REST para gerenciar usuários segurados.  
+Conta com autenticação JWT, middleware de permissão e respostas padronizadas em JSON.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Controllers** em `app/Http/Controllers`  
+  - `AuthController.php` — registro, login, logout e refresh de token.  
+  - `UserController.php` — CRUD de usuários.  
+  - `InsuredController.php` — CRUD de segurados.  
+- **Middleware** em `app/Http/Middleware` para verificação de permissões via `AccessPermissionService`.  
+- **Models** em `app/Models` para `User` e `Insured`.  
+- **Services** em `app/Services`  
+  - `AccessPermissionService.php` — lógica de autorização.  
+  - `ApiResponse.php` — formata JSON de resposta.  
+- **Rotas** em `routes/api.php`, agrupadas por middleware `auth:api` e prefixo `/api`.  
+- **Migrações** e **Seeders** em `database/` para criação de tabelas e dados de teste.  
+- Suporte a **CORS** e **Rate-Limiting** configurados em `config/*.php`.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Pré-requisitos
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Docker ≥ 20.10  
+- Docker Compose ≥ 1.29  
+- (Opcional) Composer local para comandos Artisan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Estrutura de Pastas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+app/
+ ├─ Http/
+ │   ├─ Controllers/
+ │   └─ Middleware/
+ ├─ Models/
+ └─ Services/
+bootstrap/
+config/
+database/
+ ├─ migrations/
+ └─ seeders/
+public/
+resources/
+routes/
+tests/
+vendor/
+.env.example
+composer.json
+docker-compose.yml
+```
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Configuração
 
-## Contributing
+1. Copie `.env.example` para `.env` e ajuste conforme necessário:
+   ```ini
+   APP_NAME=insured_api
+   APP_ENV=local
+   APP_KEY=base64:GENERATE_WITH_php artisan key:generate
+   APP_DEBUG=true
+   APP_URL=http://localhost
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   DB_CONNECTION=mysql
+   DB_HOST=db
+   DB_PORT=3306
+   DB_DATABASE=insured
+   DB_USERNAME=insured_user
+   DB_PASSWORD=secret
 
-## Code of Conduct
+   SANCTUM_STATEFUL_DOMAINS=localhost
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Gere a chave da aplicação:
+   ```bash
+   docker-compose run --rm app php artisan key:generate
+   ```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Docker Compose
 
-## License
+Crie um arquivo `docker-compose.yml` na raiz com o seguinte conteúdo:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
+```yaml
+version: '3.8'
 
->>>>>>> b5ee4bcafe726d166972e255be559b8c286f6840
+services:
+  app:
+    image: php:8.4.5-apache
+    container_name: insured_api
+    ports:
+      - '8000:80'
+    volumes:
+      - ./:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: \${APP_KEY}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: \${DB_DATABASE}
+      DB_USERNAME: \${DB_USERNAME}
+      DB_PASSWORD: \${DB_PASSWORD}
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    container_name: insured_db
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: insured
+      MYSQL_USER: insured_user
+      MYSQL_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
+```
+
+---
+
+## Comandos úteis
+
+- Subir containers:
+  ```bash
+  docker-compose up -d --build
+  ```
+- Ver logs do backend:
+  ```bash
+  docker-compose logs -f app
+  ```
+- Rodar migrations e seeders:
+  ```bash
+  docker-compose exec app php artisan migrate --seed
+  ```
+- Executar testes:
+  ```bash
+  docker-compose exec app php artisan test
+  ```
+
+---
+
+## Endpoints principais
+
+| Método | URL                | Descrição                      |
+|:------:|--------------------|--------------------------------|
+| POST   | `/api/register`    | Registrar novo usuário         |
+| POST   | `/api/login`       | Autenticar e obter token JWT   |
+| POST   | `/api/logout`      | Invalidar token                |
+| GET    | `/api/users`       | Listar usuários (protegido)    |
+| GET    | `/api/insureds`    | Listar segurados (protegido)   |
+| POST   | `/api/insureds`    | Criar segurado (protegido)     |
+| …      | …                  | …                              |
+
+---
+
+## Contribuindo
+
+1. Faça um fork deste repositório  
+2. Crie uma branch feature:
+   ```bash
+   git checkout -b feature/nome-da-feature
+   ```
+3. Commit suas alterações:
+   ```bash
+   git commit -m "feat: descrição da feature"
+   ```
+4. Abra um Pull Request  
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
