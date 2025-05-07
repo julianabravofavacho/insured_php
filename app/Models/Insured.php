@@ -15,14 +15,13 @@ class Insured extends Model
         'name',
         'cpf_cnpj',
         'email',
-        'celular',
-        'cep',
-        'endereco',
-        'complemento',
-        'bairro',
-        'cidade',
-        'uf',
-        'active'
+        'cell_phone',
+        'postal_code',
+        'address',
+        'address_line2',
+        'neighborhood',
+        'city',
+        'state'
     ];
 
 

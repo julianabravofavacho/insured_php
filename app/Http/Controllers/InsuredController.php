@@ -13,10 +13,10 @@ class InsuredController extends Controller
 {
     /**
 *  @OA\GET(
-*      path="/api/insureds",
+*      path="/api/Insured",
 *      summary="Get all insured",
 *      description="Get all insured",
-*      tags={"Insureds"},
+*      tags={"Insured"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Response(
 *          response=200,
@@ -35,26 +35,26 @@ class InsuredController extends Controller
 
     /**
 *  @OA\POST(
-*      path="/api/insureds",
+*      path="/api/Insured",
 *      summary="Create a insured",
 *      description="Create a insured",
-*      tags={"Insureds"},
+*      tags={"Insured"},
 *      security={{"bearerAuth":{}}},
 *      @OA\RequestBody(
 *         required=true,
 *         @OA\JsonContent(
 *           type="object",
-*           required={"name","cpf_cnpj","email","celular","cep","endereco","bairro","cidade","uf"},
+*           required={"name","cpf_cnpj","email","cell_phone"},
 *           @OA\Property(property="name", type="string"),
 *           @OA\Property(property="cpf_cnpj", type="string"),
 *           @OA\Property(property="email", type="string"),
-*           @OA\Property(property="celular", type="string"),
-*           @OA\Property(property="cep", type="string"),
-*           @OA\Property(property="endereco", type="string"),
-*           @OA\Property(property="complemento", type="string"),
-*           @OA\Property(property="bairro", type="string"),
-*           @OA\Property(property="cidade", type="string"),
-*           @OA\Property(property="uf", type="string"),
+*           @OA\Property(property="cell_phone", type="string"),
+*           @OA\Property(property="postal_code", type="string"),
+*           @OA\Property(property="address", type="string"),
+*           @OA\Property(property="address_line2", type="string"),
+*           @OA\Property(property="neighborhood", type="string"),
+*           @OA\Property(property="city", type="string"),
+*           @OA\Property(property="state", type="string"),
 *         )
 *      ),
 *      @OA\Response(
@@ -73,7 +73,7 @@ class InsuredController extends Controller
             'name' => 'required',
             'cpf_cnpj' => ['required', new CpfCnpj],
             'email' => 'required|email',
-            'celular' => 'required'
+            'cell_phone' => 'required'
 
         ]);
 
@@ -96,10 +96,10 @@ class InsuredController extends Controller
 
    /**
 *  @OA\GET(
-*      path="/api/insureds/{id}",
+*      path="/api/Insured/{id}",
 *      summary="Get insured by id",
 *      description="Get insured by id",
-*      tags={"Insureds"},
+*      tags={"Insured"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *         name="id",
@@ -142,10 +142,10 @@ class InsuredController extends Controller
 
     /**
 *  @OA\PUT(
-*      path="/api/insureds/{id}",
+*      path="/api/Insured/{id}",
 *      summary="Update a insured",
 *      description="Update a insured",
-*      tags={"Insureds"},
+*      tags={"Insured"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *          name="id",
@@ -160,17 +160,17 @@ class InsuredController extends Controller
 *         required=true,
 *         @OA\JsonContent(
 *           type="object",
-*           required={"name","cpf_cnpj","email","celular"},
+*           required={"name","cpf_cnpj","email","cell_phone"},
 *           @OA\Property(property="name", type="string"),
 *           @OA\Property(property="cpf_cnpj", type="string"),
 *           @OA\Property(property="email", type="string"),
-*           @OA\Property(property="celular", type="string"),
-*           @OA\Property(property="cep", type="string"),
-*           @OA\Property(property="endereco", type="string"),
-*           @OA\Property(property="complemento", type="string"),
-*           @OA\Property(property="bairro", type="string"),
-*           @OA\Property(property="cidade", type="string"),
-*           @OA\Property(property="uf", type="string"),
+*           @OA\Property(property="cell_phone", type="string"),
+*           @OA\Property(property="postal_code", type="string"),
+*           @OA\Property(property="address", type="string"),
+*           @OA\Property(property="address_line2", type="string"),
+*           @OA\Property(property="neighborhood", type="string"),
+*           @OA\Property(property="city", type="string"),
+*           @OA\Property(property="state", type="string"),
 *         )
 *      ),
 *      @OA\Response(
@@ -193,16 +193,23 @@ class InsuredController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required',
-            'cpf_cnpj' => ['required', new CpfCnpj],
-            'email' => 'required|email',
-            'celular' => 'required'
-
+            'name'         => 'required',
+            'cpf_cnpj'     => ['required', new CpfCnpj],
+            'email'        => 'required|email',
+            'cell_phone'   => 'required',
+            'postal_code'  => 'nullable',
+            'address'      => 'nullable',
+            'address_line2'=> 'nullable',
+            'neighborhood' => 'nullable',
+            'city'         => 'nullable',
+            'state'        => 'nullable',
         ]);
 
         try{
 
-            $insured = Insured::update($request->all());
+            $insured = Insured::findOrFail($id);
+            $insured->update($request->all());
+            $insured->refresh();
 
             return ApiResponse::success($insured);
 
@@ -217,10 +224,10 @@ class InsuredController extends Controller
 
     /**
 *  @OA\Delete(
-*      path="/api/insureds",
+*      path="/api/Insured",
 *      summary="Delete a insured",
 *      description="Delete a insured",
-*      tags={"Insureds"},
+*      tags={"Insured"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *          name="id",

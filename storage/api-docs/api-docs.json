@@ -5,28 +5,37 @@
         "version": "0.1"
     },
     "paths": {
-        "/api/login": {
+        "/api/Authentication/login": {
             "post": {
                 "tags": [
-                    "Login/Logout"
+                    "Authentication"
                 ],
                 "summary": "Login",
                 "description": "Login",
-                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email",
-                        "required": true
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "Password",
-                        "required": true
+                "operationId": "2d1861e6dca81016ed2103f5ad4032ae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -37,14 +46,14 @@
                 }
             }
         },
-        "/api/logout": {
+        "/api/Authentication/logout": {
             "delete": {
                 "tags": [
-                    "Login/Logout"
+                    "Authentication"
                 ],
-                "summary": "Revoke all users tokens",
-                "description": "Revoke all users tokens",
-                "operationId": "fd694301e769d83fdd749695a3cc435b",
+                "summary": "Revoke the last user token",
+                "description": "Revoke the last user token",
+                "operationId": "2306d0e8e48785f24d2f4a54b9467c25",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -66,14 +75,14 @@
                 ]
             }
         },
-        "/api/insureds": {
+        "/api/Insured": {
             "get": {
                 "tags": [
-                    "Insureds"
+                    "Insured"
                 ],
                 "summary": "Get all insured",
                 "description": "Get all insured",
-                "operationId": "a99c8065ff818e508c756256fb7ac85d",
+                "operationId": "bb8efef9aec2cbe00c43d5c1527c3caa",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -90,11 +99,11 @@
             },
             "post": {
                 "tags": [
-                    "Insureds"
+                    "Insured"
                 ],
                 "summary": "Create a insured",
                 "description": "Create a insured",
-                "operationId": "744a5e942476bb481403717f1d8a7a74",
+                "operationId": "d6c0c569b3b02db8d02f44d9c95641dd",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -104,12 +113,7 @@
                                     "name",
                                     "cpf_cnpj",
                                     "email",
-                                    "celular",
-                                    "cep",
-                                    "endereco",
-                                    "bairro",
-                                    "cidade",
-                                    "uf"
+                                    "cell_phone"
                                 ],
                                 "properties": {
                                     "name": {
@@ -121,25 +125,25 @@
                                     "email": {
                                         "type": "string"
                                     },
-                                    "celular": {
+                                    "cell_phone": {
                                         "type": "string"
                                     },
-                                    "cep": {
+                                    "postal_code": {
                                         "type": "string"
                                     },
-                                    "endereco": {
+                                    "address": {
                                         "type": "string"
                                     },
-                                    "complemento": {
+                                    "address_line2": {
                                         "type": "string"
                                     },
-                                    "bairro": {
+                                    "neighborhood": {
                                         "type": "string"
                                     },
-                                    "cidade": {
+                                    "city": {
                                         "type": "string"
                                     },
-                                    "uf": {
+                                    "state": {
                                         "type": "string"
                                     }
                                 },
@@ -164,11 +168,11 @@
             },
             "delete": {
                 "tags": [
-                    "Insureds"
+                    "Insured"
                 ],
                 "summary": "Delete a insured",
                 "description": "Delete a insured",
-                "operationId": "1f57ce296d4a9d6865d5143a5c96ea4c",
+                "operationId": "cb2852a27951a014f285c0a0ac48f4a4",
                 "parameters": [
                     {
                         "name": "id",
@@ -202,14 +206,14 @@
                 ]
             }
         },
-        "/api/insureds/{id}": {
+        "/api/Insured/{id}": {
             "get": {
                 "tags": [
-                    "Insureds"
+                    "Insured"
                 ],
                 "summary": "Get insured by id",
                 "description": "Get insured by id",
-                "operationId": "27936599c96901ceda41eaf689a61c12",
+                "operationId": "e41d1c9304df9ac0dd0be3e2ba7064b0",
                 "parameters": [
                     {
                         "name": "id",
@@ -244,11 +248,11 @@
             },
             "put": {
                 "tags": [
-                    "Insureds"
+                    "Insured"
                 ],
                 "summary": "Update a insured",
                 "description": "Update a insured",
-                "operationId": "6e12ceada5de9c9d4a80db4982fbb8c0",
+                "operationId": "f0f334474cb99f7f571df54a5a33e7f0",
                 "parameters": [
                     {
                         "name": "id",
@@ -269,7 +273,7 @@
                                     "name",
                                     "cpf_cnpj",
                                     "email",
-                                    "celular"
+                                    "cell_phone"
                                 ],
                                 "properties": {
                                     "name": {
@@ -281,25 +285,25 @@
                                     "email": {
                                         "type": "string"
                                     },
-                                    "celular": {
+                                    "cell_phone": {
                                         "type": "string"
                                     },
-                                    "cep": {
+                                    "postal_code": {
                                         "type": "string"
                                     },
-                                    "endereco": {
+                                    "address": {
                                         "type": "string"
                                     },
-                                    "complemento": {
+                                    "address_line2": {
                                         "type": "string"
                                     },
-                                    "bairro": {
+                                    "neighborhood": {
                                         "type": "string"
                                     },
-                                    "cidade": {
+                                    "city": {
                                         "type": "string"
                                     },
-                                    "uf": {
+                                    "state": {
                                         "type": "string"
                                     }
                                 },
@@ -329,14 +333,14 @@
                 ]
             }
         },
-        "/api/users": {
+        "/api/User": {
             "get": {
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Get all users",
                 "description": "Get all users",
-                "operationId": "c457726701591d1183b53aa71fc13441",
+                "operationId": "be0e8e93bf21aab682efc8fbb6f527e2",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -353,11 +357,11 @@
             },
             "post": {
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Create a user",
                 "description": "Create a user",
-                "operationId": "592819a0265360b2014512d6dbfaf0e7",
+                "operationId": "385f24cb107d22a0728de3a91090917c",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -373,8 +377,13 @@
                                     "password": {
                                         "type": "string"
                                     },
-                                    "adm": {
-                                        "type": "integer"
+                                    "is_adm": {
+                                        "type": "integer",
+                                        "default": 1
+                                    },
+                                    "is_active": {
+                                        "type": "integer",
+                                        "default": 1
                                     }
                                 },
                                 "type": "object"
@@ -404,11 +413,11 @@
             },
             "delete": {
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Delete a user",
                 "description": "Delete a user",
-                "operationId": "4c379784bda21ca7b50aa7d4446641db",
+                "operationId": "b6efe346218bd422c64fafc73c1f7507",
                 "parameters": [
                     {
                         "name": "id",
@@ -442,14 +451,14 @@
                 ]
             }
         },
-        "/api/users/{id}": {
+        "/api/User/{id}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Get user by id",
                 "description": "Get user by id",
-                "operationId": "36a33ff774d5cba33c039dec2c3e0287",
+                "operationId": "fe07b70b3f68d4ad1b5cc90fa01c7663",
                 "parameters": [
                     {
                         "name": "id",
@@ -484,11 +493,11 @@
             },
             "put": {
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Update a user",
                 "description": "Update a user",
-                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "operationId": "2985958bb89eadc9dc6c73342d7ad693",
                 "parameters": [
                     {
                         "name": "id",
@@ -506,9 +515,13 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "name"
+                                    "name",
+                                    "id"
                                 ],
                                 "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
                                     "name": {
                                         "type": "string"
                                     },
@@ -518,7 +531,10 @@
                                     "password": {
                                         "type": "string"
                                     },
-                                    "adm": {
+                                    "is_active": {
+                                        "type": "integer"
+                                    },
+                                    "is_adm": {
                                         "type": "integer"
                                     }
                                 },
@@ -563,16 +579,16 @@
     },
     "tags": [
         {
-            "name": "Login/Logout",
-            "description": "Login/Logout"
+            "name": "Authentication",
+            "description": "Authentication"
         },
         {
-            "name": "Insureds",
-            "description": "Insureds"
+            "name": "Insured",
+            "description": "Insured"
         },
         {
-            "name": "Users",
-            "description": "Users"
+            "name": "User",
+            "description": "User"
         }
     ]
 }

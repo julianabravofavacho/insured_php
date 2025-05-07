@@ -10,9 +10,9 @@ class ApiResponse {
         
         return response()->json(
             [
-                'status_code' => 200,
-                'message' => 'Sucesso',
-                'data' => $data
+                'sucesso' => true,
+                'dados' => $data,
+                'message' => 'Sucesso'
             ]
             );
     }

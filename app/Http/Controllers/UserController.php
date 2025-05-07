@@ -15,10 +15,10 @@ class UserController extends Controller
     
     /**
 *  @OA\GET(
-*      path="/api/users",
+*      path="/api/User",
 *      summary="Get all users",
 *      description="Get all users",
-*      tags={"Users"},
+*      tags={"User"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Response(
 *          response=200,
@@ -37,10 +37,10 @@ class UserController extends Controller
 
     /**
 *  @OA\POST(
-*      path="/api/users",
+*      path="/api/User",
 *      summary="Create a user",
 *      description="Create a user",
-*      tags={"Users"},
+*      tags={"User"},
 *      security={{"bearerAuth":{}}},
 *      @OA\RequestBody(
 *         required=true,
@@ -49,7 +49,8 @@ class UserController extends Controller
 *           @OA\Property(property="name", type="string"),
 *           @OA\Property(property="email", type="string"),
 *           @OA\Property(property="password", type="string"),
-*           @OA\Property(property="adm", type="integer"),
+*           @OA\Property(property="is_adm", type="integer", default=1),
+*           @OA\Property(property="is_active", type="integer", default=1),
 *         )
 *      ),
 *      @OA\Response(
@@ -70,34 +71,27 @@ class UserController extends Controller
 */
     public function store(Request $request)
     {
-       /* $userId = auth()->id();
-
-        $permission_adm = app(AccessPermissionService::class)->userHasWildcardPermission($userId);
-
-        if($permission_adm){*/
 
             $request->validate([
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'password' => 'required',
-                'adm' => 'required|in:0,1'
+                'is_active' => 'in:0,1',
+                'is_adm' => 'in:0,1'
             ]);
 
             $user = User::create($request->all());
 
             return ApiResponse::success($user);
 
-        //}
-        
-        //return ApiResponse::unathourized();
     }
 
     /**
 *  @OA\GET(
-*      path="/api/users/{id}",
+*      path="/api/User/{id}",
 *      summary="Get user by id",
 *      description="Get user by id",
-*      tags={"Users"},
+*      tags={"User"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *         name="id",
@@ -139,10 +133,10 @@ class UserController extends Controller
 
     /**
 *  @OA\PUT(
-*      path="/api/users/{id}",
+*      path="/api/User/{id}",
 *      summary="Update a user",
 *      description="Update a user",
-*      tags={"Users"},
+*      tags={"User"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *          name="id",
@@ -157,11 +151,13 @@ class UserController extends Controller
 *         required=true,
 *         @OA\JsonContent(
 *           type="object",
-*           required={"name"},
+*           required={"name", "id"},
+*           @OA\Property(property="id", type="string"),
 *           @OA\Property(property="name", type="string"),
 *           @OA\Property(property="email", type="string"),
 *           @OA\Property(property="password", type="string"),
-*           @OA\Property(property="adm", type="integer"),
+*           @OA\Property(property="is_active", type="integer"),
+*           @OA\Property(property="is_adm", type="integer"),
 *         )
 *      ),
 *      @OA\Response(
@@ -184,9 +180,11 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
+            'id' => 'required',
             'name' => 'required',
             'email' => 'email|unique:users,email,' .$id,
-            'active' => 'in:0,1'
+            'is_active' => 'in:0,1',
+            'is_adm' => 'in:0,1'
         ]);
 
         $user = User::find($id);
@@ -206,10 +204,10 @@ class UserController extends Controller
 
         /**
 *  @OA\Delete(
-*      path="/api/users",
+*      path="/api/User",
 *      summary="Delete a user",
 *      description="Delete a user",
-*      tags={"Users"},
+*      tags={"User"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Parameter(
 *          name="id",

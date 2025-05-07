@@ -10,21 +10,18 @@ class AuthController extends Controller
 {
 /**
 *  @OA\POST(
-*      path="/api/login",
+*      path="/api/Authentication/login",
 *      summary="Login",
 *      description="Login",
-*      tags={"Login/Logout"},
-*     @OA\Parameter(
-*         name="email",
-*         in="query",
-*         description="email",
+*      tags={"Authentication"},
+*      @OA\RequestBody(
 *         required=true,
-*      ),
-*     @OA\Parameter(
-*         name="password",
-*         in="query",
-*         description="Password",
-*         required=true,
+*         @OA\JsonContent(
+*           type="object",
+*           required={"name","email","password"},
+*           @OA\Property(property="email", type="string"),
+*           @OA\Property(property="password", type="string"),
+*         )
 *      ),
 *      @OA\Response(
 *          response=200,
@@ -59,27 +56,27 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        $adm = $user->adm;
+        $adm = $user->is_adm;
 
-        $permissions = $adm == 0 ? ['show'] : ["*"];
+        $permissions = $adm == 0 ? ["show"] : ["*"];
 
         $token = $user->createToken($user->name, $permissions)->plainTextToken;
 
         return ApiResponse::success(
             [
-                'user' => $user->name,
-                'email' => $user->email,
-                'token' => $token
+                'token' => $token,
+                'expiresAt' => $user->email,
+                'abilities' => $permissions
             ]
             );
     }
 
   /**
 *  @OA\DELETE(
-*      path="/api/logout",
-*      summary="Revoke all users tokens",
-*      description="Revoke all users tokens",
-*      tags={"Login/Logout"},
+*      path="/api/Authentication/logout",
+*      summary="Revoke the last user token",
+*      description="Revoke the last user token",
+*      tags={"Authentication"},
 *      security={{"bearerAuth":{}}},
 *      @OA\Response(
 *          response=200,
