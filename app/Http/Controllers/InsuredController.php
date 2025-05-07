@@ -11,7 +11,7 @@ use App\Rules\CpfCnpj;
 class InsuredController extends Controller
 {
     /**
-*  @OA\GET(
+*  @OA\Get(
 *      path="/api/Insured",
 *      summary="Get all insured",
 *      description="Get all insured",
@@ -33,7 +33,7 @@ class InsuredController extends Controller
     }
 
     /**
-*  @OA\POST(
+*  @OA\Post(
 *      path="/api/Insured",
 *      summary="Create a insured",
 *      description="Create a insured",
@@ -94,7 +94,7 @@ class InsuredController extends Controller
     }
 
    /**
-*  @OA\GET(
+*  @OA\Get(
 *      path="/api/Insured/{id}",
 *      summary="Get insured by id",
 *      description="Get insured by id",
@@ -140,7 +140,7 @@ class InsuredController extends Controller
     }
 
     /**
-*  @OA\PUT(
+*  @OA\Put(
 *      path="/api/Insured/{id}",
 *      summary="Update a insured",
 *      description="Update a insured",
