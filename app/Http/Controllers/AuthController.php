@@ -35,40 +35,32 @@ class AuthController extends Controller
 */
     public function login (Request $request)
     {
-       $request->validate([
-            'email' => 'required|email|exists:users',
-            'password' => 'required'
+        $request->validate([
+            'email'    => 'required|email|exists:users',
+            'password' => 'required',
         ]);
-
-        $email = $request->email;
-        $password = $request->password;
-
-        $attempt = auth()->attempt(
-            [
-                'email' => $email,
-                'password' => $password
-            ]
-        );
-
-        if(!$attempt){
+    
+        if (! auth()->attempt($request->only('email','password'))) {
             return ApiResponse::unathourized();
         }
-
+    
         $user = auth()->user();
+        $abilities = $user->is_adm
+            ? ['*']
+            : ['show'];
+    
+        $newToken = $user->createToken($user->name, $abilities);
 
-        $adm = $user->is_adm;
-
-        $permissions = $adm == 0 ? ["show"] : ["*"];
-
-        $token = $user->createToken($user->name, $permissions)->plainTextToken;
-
-        return ApiResponse::success(
-            [
-                'token' => $token,
-                'expiresAt' => $user->email,
-                'abilities' => $permissions
-            ]
-            );
+        $pat = $newToken->accessToken;
+        $minutes = (int) config('sanctum.expiration');
+        $pat->expires_at = now()->addMinutes($minutes);
+        $pat->save();
+    
+        return ApiResponse::success([
+            'token'     => $newToken->plainTextToken,
+            'expiresAt' => $newToken->accessToken->expires_at?->toDateTimeString(),
+            'abilities' => $abilities,
+        ]);
     }
 
   /**
