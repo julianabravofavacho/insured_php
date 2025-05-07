@@ -7,7 +7,6 @@ use App\Services\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Rules\CpfCnpj;
-use App\Models\PersonalAccessToken;
 
 class InsuredController extends Controller
 {
@@ -224,7 +223,7 @@ class InsuredController extends Controller
 
     /**
 *  @OA\Delete(
-*      path="/api/Insured",
+*      path="/api/Insured/{id}",
 *      summary="Delete a insured",
 *      description="Delete a insured",
 *      tags={"Insured"},
