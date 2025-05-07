@@ -17,7 +17,7 @@ class CheckUserPermission
     public function handle(Request $request, Closure $next): Response
     {
         $userId = auth()->id();
-        //dd("ID DO USUÁRIO:" .$userId);
+        
         $access = app(AccessPermissionService::class)->userHasWildcardPermission($userId);
 
         if (!$access) {
