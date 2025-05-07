@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
 /**
-*  @OA\POST(
+*  @OA\Post(
 *      path="/api/Authentication/login",
 *      summary="Login",
 *      description="Login",
@@ -64,7 +64,7 @@ class AuthController extends Controller
     }
 
   /**
-*  @OA\DELETE(
+*  @OA\Delete(
 *      path="/api/Authentication/logout",
 *      summary="Revoke the last user token",
 *      description="Revoke the last user token",

@@ -12,7 +12,7 @@ class UserController extends Controller
     
     
     /**
-*  @OA\GET(
+*  @OA\Get(
 *      path="/api/User",
 *      summary="Get all users",
 *      description="Get all users",
@@ -34,7 +34,7 @@ class UserController extends Controller
     }
 
     /**
-*  @OA\POST(
+*  @OA\Post(
 *      path="/api/User",
 *      summary="Create a user",
 *      description="Create a user",
@@ -85,7 +85,7 @@ class UserController extends Controller
     }
 
     /**
-*  @OA\GET(
+*  @OA\Get(
 *      path="/api/User/{id}",
 *      summary="Get user by id",
 *      description="Get user by id",
@@ -130,7 +130,7 @@ class UserController extends Controller
     }
 
     /**
-*  @OA\PUT(
+*  @OA\Put(
 *      path="/api/User/{id}",
 *      summary="Update a user",
 *      description="Update a user",
@@ -200,9 +200,9 @@ class UserController extends Controller
 
 
 
-        /**
+/**
 *  @OA\Delete(
-*      path="/api/User",
+*      path="/api/User/{id}",
 *      summary="Delete a user",
 *      description="Delete a user",
 *      tags={"User"},
