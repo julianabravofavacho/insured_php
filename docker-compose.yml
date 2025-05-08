@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: insured_api
+    ports:
+      - "8000:80"
+    entrypoint:
+      - sh
+      - -c
+      - |
+        chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+        chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+        exec docker-php-entrypoint apache2-foreground
+    volumes:
+      - ./:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: ${APP_KEY}
+      DB_CONNECTION: mysql
+      # Use o IP fixo da rede customizada
+      DB_HOST: 178.20.0.2
+      DB_PORT: 3306
+      DB_DATABASE: insured
+      DB_USERNAME: insured_user
+      DB_PASSWORD: secret
+    depends_on:
+      - db
+    networks:
+      insured_net:
+        ipv4_address: 178.20.0.3
+
+  db:
+    image: docker.io/mysql:latest
+    container_name: insured_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: insured
+      MYSQL_USER: insured_user
+      MYSQL_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      insured_net:
+        ipv4_address: 178.20.0.2
+
+volumes:
+  dbdata:
+
+networks:
+  insured_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 178.20.0.0/24
+          gateway: 178.20.0.1
