@@ -2,49 +2,39 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class CpfCnpj implements Rule
+class CpfCnpj implements ValidationRule
 {
-    public function passes($attribute, $value)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        // Remove caracteres não numéricos
-        $value = preg_replace('/\D/', '', $value);
+        // Remove tudo que não for dígito
+        $digits = preg_replace('/\D/', '', (string) $value);
 
-        // Verifica se é CPF ou CNPJ pelo tamanho
-        if (strlen($value) === 11) {
-            return $this->validateCpf($value);
-        } elseif (strlen($value) === 14) {
-            return $this->validateCnpj($value);
+        // Decide se é CPF ou CNPJ
+        if (strlen($digits) === 11) {
+            $valid = $this->validateCpf($digits);
+        } elseif (strlen($digits) === 14) {
+            $valid = $this->validateCnpj($digits);
+        } else {
+            $valid = false;
         }
 
-        return false;
-    }
-
-    public function message()
-    {
-        return 'O campo deve ser um CPF ou CNPJ válido.';
-    }
-
-    private function validateCpf($cpf)
-    {
-        // Aqui você pode colocar a lógica de validação de CPF
-        // Para simplificar, vou usar uma validação básica
-        if (preg_match('/^(\d{11})$/', $cpf)) {
-            // Adicione validações específicas de CPF aqui, se desejar
-            return true;
+        if (! $valid) {
+            $fail('O campo deve ser um CPF ou CNPJ válido.');
         }
-        return false;
     }
 
-    private function validateCnpj($cnpj)
+    private function validateCpf(string $cpf): bool
     {
-        // Aqui você pode colocar a lógica de validação de CNPJ
-        // Para simplificar, vou usar uma validação básica
-        if (preg_match('/^(\d{14})$/', $cnpj)) {
-            // Adicione validações específicas de CNPJ aqui, se desejar
-            return true;
-        }
-        return false;
+        // lógica de validação de CPF (ex: regex + dígitos verificadores)
+        return (bool) preg_match('/^\d{11}$/', $cpf);
+    }
+
+    private function validateCnpj(string $cnpj): bool
+    {
+        // lógica de validação de CNPJ (ex: regex + dígitos verificadores)
+        return (bool) preg_match('/^\d{14}$/', $cnpj);
     }
 }

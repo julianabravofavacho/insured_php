@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**insured_api** é a API backend desenvolvida em Laravel 19 sobre PHP 8.4.5, responsável por expor endpoints REST para gerenciar usuários segurados.  
+**insured_api** é a API backend desenvolvida em Laravel 12 e PHP 8.4.5, responsável por expor endpoints REST para gerenciar usuários segurados.  
 Conta com autenticação JWT, middleware de permissão e respostas padronizadas em JSON.
 
 ---
